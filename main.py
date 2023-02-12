@@ -42,7 +42,7 @@ if local_store_file in files:
         browser = local_strs[8]
     else:
         os.remove(local_store_file_path)
-        raise IOError('Wrong format for ./log, deleted!')
+        raise IOError('Wrong format for %s, %d of %d, deleted!' % (local_store_file, len(local_strs), 9))
 
 # Auto login function
 global thread_stop
@@ -79,7 +79,8 @@ class myThread:
 
         # Write log.
         io.write_to_file([self.username, self.password, str(self.retry), str(self.interval),
-                          self.url, self.xpath_username, self.xpath_password, self.xpath_login], local_store_file)
+                          self.url, self.xpath_username, self.xpath_password,
+                          self.xpath_login, self.browser], local_store_file)
         # Start thread.
         self.thread = threading.Thread(target=self.auto_login)
         global thread_stop
