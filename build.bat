@@ -1,0 +1,1 @@
+pyinstaller -i icon.ico -F -w main.py -n "Auto Login.exe"
