@@ -8,8 +8,12 @@ import ctypes
 import tkinter as tk
 from tkinter import ttk
 import time
+import platform
 
 
+####################################################################################
+#                                      GUI                                         #
+####################################################################################
 class GUI:
     def __init__(self, username='Admin', password='123456', retry=3, interval=30,
                  url='http://192.168.12.131/ac_portal/default/pc.html?tabs=pwd',

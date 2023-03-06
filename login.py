@@ -2,6 +2,7 @@
 Auto Login - Web
 By Hyder Pang @ 2023-2-8
 """
+import os
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -22,31 +23,40 @@ def login(username, password, retry, url, xpath_username, xpath_password, xpath_
     for i in range(retry):
         # 1. Open browser.
         if browser == 'Firefox':
-            driver = webdriver.Firefox()
+            from selenium.webdriver.firefox.options import Options
+            options = Options()
+            options.log.level = "fatal"
+            driver = webdriver.Firefox(options=options)
         elif browser == 'Chrome':
             driver = webdriver.Chrome()
         elif browser == 'Edge':
             driver = webdriver.Edge()
         driver.get(url)
-        time.sleep(0.2)
 
         # 2. Input username.
         # pasted from firefox-查看器-element右键复制XPATH
         el = driver.find_element(By.XPATH, xpath_username)
         el.send_keys(username)
-        time.sleep(0.2)
 
         # 3. Input password.
         el = driver.find_element(By.XPATH, xpath_password)
         el.send_keys(password)
-        time.sleep(0.2)
 
         # 4. Click login button.
         el = driver.find_element(By.XPATH, xpath_login)
         el.click()
-        time.sleep(0.2)
 
+        # 5. Quit driver.
         driver.quit()
+
+        # 6. Remove tmp file.
+        if browser == 'Firefox':
+            os.remove('geckodriver.log')
+        # elif browser == 'Chrome':
+        #
+        # elif browser == 'Edge':
+        #
+
         if isConnected():
             return True
     return False

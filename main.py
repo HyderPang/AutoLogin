@@ -14,7 +14,7 @@ import threading
 
 username = 'Admin'
 password = '12345'
-retry = 3
+retry = 1
 interval = 30
 url = 'http://192.168.12.131/ac_portal/default/pc.html?tabs=pwd'
 xpath_username = '//*[@id=\"password_name\"]'
@@ -26,9 +26,13 @@ local_store_file = 'autologin.log'
 
 # Read stored parameters.
 io = base64_io()
-files = os.listdir()
+app_dir = os.path.expanduser("~") + os.sep + '.auto_login/'
+if not os.path.exists(app_dir):
+    os.makedirs(app_dir)
+
+files = os.listdir(app_dir)
 if local_store_file in files:
-    local_store_file_path = os.getcwd() + os.sep + local_store_file
+    local_store_file_path = app_dir + os.sep + local_store_file
     local_strs = io.read_from_file(local_store_file_path)
     if len(local_strs) == 9:
         username = local_strs[0]
@@ -80,7 +84,7 @@ class myThread:
         # Write log.
         io.write_to_file([self.username, self.password, str(self.retry), str(self.interval),
                           self.url, self.xpath_username, self.xpath_password,
-                          self.xpath_login, self.browser], local_store_file)
+                          self.xpath_login, self.browser], local_store_file_path)
         # Start thread.
         self.thread = threading.Thread(target=self.auto_login)
         global thread_stop
@@ -115,3 +119,4 @@ gui = GUI(username, password, retry, interval, url, xpath_username, xpath_passwo
 t1 = myThread(gui)
 gui.set_button_callback(t1.start, t1.stop)
 gui.run()
+
